@@ -1,4 +1,4 @@
-def run_0_4_0():
+def maze_0_1_0():
 	DEBUG = False
 	FERTILIZER_BATCH_BUY = 10
 
@@ -61,17 +61,17 @@ def run_0_4_0():
 
 		return walls
 
-	def directions(previous_direction):
-		if previous_direction == None:
+	def new_directions(return_direction):
+		if return_direction == None:
 			return DIRECTIONS
-		elif previous_direction == North:
-			return [West, North, East, South]
-		elif previous_direction == East:
-			return [North, East, South, West]
-		elif previous_direction == South:
-			return [East, South, West, North]
-		elif previous_direction == West:
-			return [South, West, North, East]
+		elif return_direction == North:
+			return [West, North, East]
+		elif return_direction == East:
+			return [North, East, South]
+		elif return_direction == South:
+			return [East, South, West]
+		elif return_direction == West:
+			return [South, West, North]
 		else:
 			error()
 
@@ -103,8 +103,20 @@ def run_0_4_0():
 
 		return target_position
 
-	def go(current_position, previous_direction, walls):
-		for direction in directions(previous_direction):
+	def opposite_direction(direction):
+		if direction == North:
+			return South
+		elif direction == East:
+			return West
+		elif direction == South:
+			return North
+		elif direction == West:
+			return East
+		else:
+			error()
+
+	def go(current_position, return_direction, walls):
+		for direction in new_directions(return_direction):
 			# quick_print(current_position, " ", directions, " trying direction: ", direction)
 			target_position = can_go(current_position, direction, walls)
 
@@ -122,8 +134,11 @@ def run_0_4_0():
 						return True
 				else:
 					walls[current_position[1]][current_position[0]][direction_index(direction)] = True
+		
+		move(return_direction)
+		return False
 
-	def solve_maze():
+	def run():
 		# visited = initialize_array(False)
 		# visited[current_position[1]][current_position[0]] = True
 
@@ -133,6 +148,6 @@ def run_0_4_0():
 			grow_hedges()
 			go(current_position, None, walls)
 	
-	solve_maze()
+	run()
 
-run_0_4_0()
+maze_0_1_0()
