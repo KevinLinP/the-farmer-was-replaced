@@ -80,23 +80,51 @@ def sunflowers_0_1_0():
 		move_to_x(target_x)
 		move_to_y(target_y)
 
+	def initialize_context():
+		return {
+			'num_petals': [],
+			'sunflower_positions_by_num_petals': {}
+		}
+
+	def insert_reverse_sorted_list(list, num):
+		for i in range(len(list)):
+			if list[i] < num:
+				list.insert(i, num)
+				return
+		list.append(num)
+
+	def track_sunflower(context, num_petals):
+		positions = context['sunflower_positions_by_num_petals'][num_petals]
+		if not positions:
+			insert_reverse_sorted_list(context['num_petals'], get_pos_x())
+			positions = []
+			context['sunflower_positions_by_num_petals'][num_petals] = positions
+		positions.append((get_pos_x(), get_pos_y()))
+
+	def pop_largest_sunflower(context):
+		num_petals = context['num_petals'][0]
+		positions = context['sunflower_positions_by_num_petals'][num_petals]
+		position = positions.pop(0)
+		if len(positions) == 0:
+			context['num_petals'].pop(0)
+		return position
+
 	def run():
-		max_petals = 0
-		max_x = None
-		max_y = None
+		context = initialize_context()
 
 		while True:
-			current_petals = plant_sunflower()
-			if current_petals > max_petals:
-				max_petals = current_petals
-				max_x = get_pos_x()
-				max_y = get_pos_y()
+			num_petals = plant_sunflower()
+			track_sunflower(context, num_petals)
 			move_next()
 			if get_pos_x() == 0 and get_pos_y() == 0:
 				break
-		
-		move_to(max_x, max_y)
-		harvest()
+
+		while True:
+			position = pop_largest_sunflower(context)
+			move_to(position[0], position[1])
+			harvest()
+			num_petals = plant_sunflower()
+			track_sunflower(context, num_petals)
 
 	run()
 
