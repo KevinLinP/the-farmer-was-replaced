@@ -1,3 +1,4 @@
+def run_0_3_0():
 # parameters
 target_hay = 3000
 target_wood = 3000
