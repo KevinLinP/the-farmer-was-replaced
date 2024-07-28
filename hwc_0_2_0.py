@@ -4,7 +4,8 @@ def hay_wood_carrots_0_2_0():
 	DEBUG = False
 	TANK_CAPACITY = 0.25
 	EMPTY_TANK_WOOD_COST = 5
-	DEFAULT_PLANT = Entities.Carrot
+	DEFAULT_PLANT = Entities.Grass
+	BUY_CARROT_SEEDS_BATCH = 100
 
 	def check_ground_type():
 		if get_ground_type() != Grounds.Soil:
@@ -77,9 +78,17 @@ def hay_wood_carrots_0_2_0():
 			array.append(row)
 		return array
 
+	def plant_entity(entity):
+		check_ground_type()
+		water_if_needed()
+		if num_items(Items.Carrot_Seed) == 0:
+			trade(Items.Carrot_Seed, BUY_CARROT_SEEDS_BATCH)
+		plant(entity)
+
 	def plant_cycles():
 		queue = [{'position': (4, 4), 'action': 'plant', 'entity': DEFAULT_PLANT}]
 		planted = initialize_array()
+		cycle_complete = False
 
 		while len(queue) > 0:
 			task = queue.pop(0)
@@ -88,25 +97,27 @@ def hay_wood_carrots_0_2_0():
 			x = position[0]
 			y = position[1]
 
+			move_to(x, y)
+
 			if task['action'] == 'plant':
-				move_to(x, y)
-				check_ground_type()
-				water_if_needed()
-				plant(task['entity'])
+				plant_entity(task['entity'])
 				planted[y][x] = True
 				companion = get_companion()
 				if not planted[companion[2]][companion[1]]:
 					queue.insert(0, {'position': (companion[1], companion[2]), 'action': 'plant', 'entity': companion[0]})
+				# else:
+				# 	quick_print("cycle complete ", companion[2], " ", companion[2])
 				queue.append({'position': task['position'], 'action': 'harvest', 'entity': task['entity']})
 			elif task['action'] == 'harvest':
-				move_to(x, y)
-
 				while not can_harvest():
 					water_if_needed()
 
 				harvest()
+				# quick_print("harvested ", x, " ", y)
 				planted[y][x] = False
-				queue.insert(0, {'position': task['position'], 'action': 'plant', 'entity': DEFAULT_PLANT})
+			
+			if len(queue) == 0:
+				queue = [{'position': (x, y), 'action': 'plant', 'entity': DEFAULT_PLANT}]
 
 	clear()
 	plant_cycles()

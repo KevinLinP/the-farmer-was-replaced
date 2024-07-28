@@ -17,12 +17,12 @@ def run_0_3_1():
 	DEBUG = False
 
 	# parameters
-	target_hay = 20000
+	target_hay = 50000
 	target_wood = 20000
 	target_carrots = 20000
 	buy_carrot_seeds_batch = 100
 
-	grow_pumpkins = True
+	grow_pumpkins = False
 	buy_pumpkin_seeds_batch = 100
 
 	def move_next(x, y, grow_pumpkins):
