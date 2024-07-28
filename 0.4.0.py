@@ -105,30 +105,32 @@ def run_0_4_0():
 
 	def go(current_position, previous_direction, walls):
 		for direction in directions(previous_direction):
-			quick_print(current_position, " ", directions, " trying direction: ", direction)
+			# quick_print(current_position, " ", directions, " trying direction: ", direction)
 			target_position = can_go(current_position, direction, walls)
 
 			if target_position != False:
 				moved = move(direction)
 
 				if moved:
+					if get_entity_type() == Entities.Treasure:
+						harvest()
+						return True
 					# not necessary ATM
 					# walls[current_position[1]][current_position[0]][direction_index(direction)] = False
-					go(target_position, direction, walls)
+					found = go(target_position, direction, walls)
+					if found:
+						return True
 				else:
 					walls[current_position[1]][current_position[0]][direction_index(direction)] = True
 
 	def solve_maze():
-		current_position = (get_pos_x(), get_pos_y())
 		# visited = initialize_array(False)
 		# visited[current_position[1]][current_position[0]] = True
-		walls = initialize_walls()
-
-		# quick_print(walls)
-
-		grow_hedges()
 
 		while True:
+			current_position = (get_pos_x(), get_pos_y())
+			walls = initialize_walls()
+			grow_hedges()
 			go(current_position, None, walls)
 	
 	solve_maze()

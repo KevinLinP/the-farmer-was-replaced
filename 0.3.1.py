@@ -19,10 +19,10 @@ def run_0_3_1():
 	# parameters
 	target_hay = 20000
 	target_wood = 20000
-	target_carrots = 1000000
+	target_carrots = 20000
 	buy_carrot_seeds_batch = 100
 
-	grow_pumpkins = False
+	grow_pumpkins = True
 	buy_pumpkin_seeds_batch = 100
 
 	def move_next(x, y, grow_pumpkins):
