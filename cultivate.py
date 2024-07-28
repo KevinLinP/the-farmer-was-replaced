@@ -18,12 +18,12 @@ def water_if_needed():
 		if num_items(Items.Wood) >= EMPTY_TANK_WOOD_COST:
 			trade(Items.Empty_Tank)
 
-def cultivate(entity):
+def cultivate(entity, water = True):
 	BUY_CARROT_SEEDS_BATCH = 100
 	BUY_CACTUS_SEEDS_BATCH = 100
 
-	# TODO: move to initialization?
-	water_if_needed()
+	if water:
+		water_if_needed()
 
 	if entity == Entities.Carrots and num_items(Items.Carrot_Seed) == 0:
 		if not trade(Items.Carrot_Seed, BUY_CARROT_SEEDS_BATCH):

@@ -4,15 +4,17 @@ def cactus():
 
 	def move_next():
 		move(East)
-		# if get_pos_x() == 0:
-		# 	move(North)
+		if get_pos_x() == 0:
+			move(North)
 
 	def fill_field(cactus_sizes):
+		move_to(0, 0)
+
 		while True:
 			x = get_pos_x()
 			y = get_pos_y()
 			check_ground_type()
-			cultivate(Entities.Cactus)
+			cultivate(Entities.Cactus, False)
 			cactus_sizes[y][x] = measure()
 
 			move_next()
@@ -25,15 +27,16 @@ def cactus():
 	def bubble_sort_x(cactus_sizes, y):
 		cactus_sizes_row = cactus_sizes[y]
 		for target_index in range(WIDTH - 1, -1, -1):
-			quick_print(cactus_sizes_row)
+			# quick_print(cactus_sizes_row)
 			largest_num = -1
 			largest_index = 0
 
 			for x in range(target_index + 1):
-				if cactus_sizes[y][x] > largest_num:
+				# >= makes this stable
+				if cactus_sizes[y][x] >= largest_num:
 					largest_num = cactus_sizes_row[x]
 					largest_index = x
-				quick_print(target_index, x, cactus_sizes_row[x], largest_index, largest_num)			
+				# quick_print(target_index, x, cactus_sizes_row[x], largest_index, largest_num)			
 
 			if largest_index == target_index:
 				continue
@@ -47,10 +50,39 @@ def cactus():
 				cactus_sizes_row[x + 1] = moved
 				move(East) # technically not needed on last iteration
 
+	def bubble_sort_y(cactus_sizes, x):
+		for target_index in range(HEIGHT - 1, -1, -1):
+			largest_num = -1
+			largest_index = 0
+
+			for y in range(target_index + 1):
+				# >= makes this stable
+				if cactus_sizes[y][x] >= largest_num:
+					largest_num = cactus_sizes[y][x]
+					largest_index = y
+
+			if largest_index == target_index:
+				continue
+
+			move_to(x, largest_index)
+			for _ in range(target_index - largest_index):
+				swap(North)
+				y = get_pos_y()
+				cactus_sizes[y][x], cactus_sizes[y + 1][x] = cactus_sizes[y + 1][x], cactus_sizes[y][x]
+				move(North)
 	
 	clear()
 	cactus_sizes = initialize_array(None)
-	fill_field(cactus_sizes)
-	bubble_sort_x(cactus_sizes, get_pos_y())
+
+	while True:
+		fill_field(cactus_sizes)
+
+		for y in range(HEIGHT):
+			bubble_sort_x(cactus_sizes, y)
+
+		for x in range(WIDTH):
+			bubble_sort_y(cactus_sizes, x)
+
+		harvest()
 
 cactus()
