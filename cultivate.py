@@ -1,11 +1,11 @@
-TANK_CAPACITY = 0.25
-EMPTY_TANK_WOOD_COST = get_cost(Items.Empty_Tank)[Items.Wood]
-
 def check_ground_type():
 	if get_ground_type() != Grounds.Soil:
 		till()
 
 def water_if_needed():
+	TANK_CAPACITY = 0.25
+	EMPTY_TANK_WOOD_COST = get_cost(Items.Empty_Tank)[Items.Wood]
+
 	num_times = (1.0 - get_water()) // TANK_CAPACITY
 
 	if num_times == 0:
@@ -20,11 +20,17 @@ def water_if_needed():
 
 def cultivate(entity):
 	BUY_CARROT_SEEDS_BATCH = 100
+	BUY_CACTUS_SEEDS_BATCH = 100
 
 	# TODO: move to initialization?
 	water_if_needed()
 
 	if entity == Entities.Carrots and num_items(Items.Carrot_Seed) == 0:
-		trade(Items.Carrot_Seed, BUY_CARROT_SEEDS_BATCH)
+		if not trade(Items.Carrot_Seed, BUY_CARROT_SEEDS_BATCH):
+			error()
+		
+	if entity == Entities.Cactus and num_items(Items.Cactus_Seed) == 0:
+		if not trade(Items.Cactus_Seed, BUY_CACTUS_SEEDS_BATCH):
+			error()
 
 	plant(entity)
