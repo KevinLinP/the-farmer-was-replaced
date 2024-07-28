@@ -3,18 +3,9 @@ def hay_wood_carrots_0_2_0():
 	HEIGHT = WIDTH
 	DEFAULT_PLANT = Entities.Grass
 
-	def initialize_array():
-		array = []
-		for _ in range(HEIGHT):
-			row = []
-			for _ in range(WIDTH):
-				row.append(False)
-			array.append(row)
-		return array
-
 	def plant_cycles():
 		queue = [{'position': (4, 4), 'action': 'plant', 'entity': DEFAULT_PLANT}]
-		planted = initialize_array()
+		planted = initialize_array(False)
 		cycle_complete = False
 
 		while len(queue) > 0:
