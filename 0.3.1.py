@@ -17,12 +17,13 @@ def run_0_3_1():
 	DEBUG = False
 
 	# parameters
-	target_hay = 5000
-	target_wood = 5000
-	target_carrots = 100000
-	buy_carrot_seeds_batch = 50
+	target_hay = 20000
+	target_wood = 20000
+	target_carrots = 1000000
+	buy_carrot_seeds_batch = 100
+
 	grow_pumpkins = False
-	buy_pumpkin_seeds_batch = 50
+	buy_pumpkin_seeds_batch = 100
 
 	def move_next(x, y, grow_pumpkins):
 		move(East)

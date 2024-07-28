@@ -6,23 +6,18 @@ def run_0_4_0():
 	HEIGHT = WIDTH
 	DIRECTIONS = [North, East, South, West]
 
-	def initialize_array(initial_value):
-		array = []
-
-		for _ in range(HEIGHT):
-			row = []
-			for _ in range(WIDTH):
-				row.append(initial_value)
-			array.append(row)
-
-		return array
-
 	def grow_hedges():
+		if get_entity_type() == Entities.Hedge:
+			return
+
 		plant(Entities.Bush)
 
+		while get_entity_type() != Entities.Bush:
+			print("waiting for hedge")
+
 		while get_entity_type() != Entities.Hedge:
-			if num_items(Entities.Fertilizer) == 0:
-				trade(Entities.Fertilizer, FERTILIZER_BATCH_BUY)
+			if num_items(Items.Fertilizer) == 0:
+				trade(Items.Fertilizer, FERTILIZER_BATCH_BUY)
 			use_item(Items.Fertilizer)
 
 	def error():
@@ -34,11 +29,11 @@ def run_0_4_0():
 		y = position[1]
 
 		if direction == North:
-			y = (y - 1) % HEIGHT
+			y = (y + 1) % HEIGHT
 		elif direction == East:
 			x = (x + 1) % WIDTH
 		elif direction == South:
-			y = (y + 1) % HEIGHT
+			y = (y - 1) % HEIGHT
 		elif direction == West:
 			x = (x - 1) % WIDTH
 		else:
@@ -47,12 +42,18 @@ def run_0_4_0():
 		return (x, y)
 
 	def initialize_walls():
-		# [N, E, S, W]
-		walls = initialize_array([None, None, None, None])
+		walls = []
+
+		for _ in range(HEIGHT):
+			row = []
+			for _ in range(WIDTH):
+				# [N, E, S, W]
+				row.append([None, None, None, None])
+			walls.append(row)
 
 		for x in range(WIDTH):
-			walls[0][x][0] = True
-			walls[HEIGHT - 1][x][2] = True
+			walls[0][x][2] = True
+			walls[HEIGHT - 1][x][0] = True
 
 		for y in range(HEIGHT):
 			walls[y][0][3] = True
@@ -61,7 +62,7 @@ def run_0_4_0():
 		return walls
 
 	def directions(previous_direction):
-		if previous_direction is None:
+		if previous_direction == None:
 			return DIRECTIONS
 		elif previous_direction == North:
 			return [West, North, East, South]
@@ -88,6 +89,8 @@ def run_0_4_0():
 
 	def can_go(position, direction, walls):
 		current_wall = walls[position[1]][position[0]][direction_index(direction)]
+		# quick_print(position[0], " ", position[1], " ", current_wall)
+		# quick_print(walls)
 		if current_wall:
 			return False
 
@@ -102,6 +105,7 @@ def run_0_4_0():
 
 	def go(current_position, previous_direction, walls):
 		for direction in directions(previous_direction):
+			quick_print(current_position, " ", directions, " trying direction: ", direction)
 			target_position = can_go(current_position, direction, walls)
 
 			if target_position != False:
@@ -120,8 +124,11 @@ def run_0_4_0():
 		# visited[current_position[1]][current_position[0]] = True
 		walls = initialize_walls()
 
+		# quick_print(walls)
+
+		grow_hedges()
+
 		while True:
-			grow_hedges()
 			go(current_position, None, walls)
 	
 	solve_maze()
