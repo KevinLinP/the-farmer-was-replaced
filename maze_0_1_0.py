@@ -1,6 +1,6 @@
 def maze_0_1_0():
 	DEBUG = False
-	FERTILIZER_BATCH_BUY = 10
+	FERTILIZER_BATCH_BUY = 100
 
 	WIDTH = get_world_size()
 	HEIGHT = WIDTH
