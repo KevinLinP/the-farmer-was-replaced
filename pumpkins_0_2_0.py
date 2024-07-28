@@ -6,7 +6,7 @@ def pumpkins_0_2_0():
 	BUY_PUMPKINS_SEED_BATCH = 100
 	EMPTY_TANK_WOOD_COST = 5
 
-	def plant(x, y):
+	def plant_pumpkin():
 		water_if_needed()
 
 		# TODO: add error check
@@ -41,6 +41,8 @@ def pumpkins_0_2_0():
 		for y in range(HEIGHT):
 			for x in range(WIDTH):
 				queue.append({'position': (x, y), 'action': 'plant'})
+
+		return queue
 
 	def move_to_x(target):
 		current = get_pos_x()
@@ -88,7 +90,7 @@ def pumpkins_0_2_0():
 		while True:
 			do_a_flip()
 
-	def run():
+	def plant_and_harvest_field():
 		queue = initialize_queue()
 
 		while len(queue) > 0:
@@ -98,11 +100,11 @@ def pumpkins_0_2_0():
 
 			if action == 'plant':
 				check_ground_type()
-				plant()
+				plant_pumpkin()
 				queue.append({'position': task['position'], 'action': 'check'})
 			elif action == 'check':
 				if get_entity_type() == None:
-					plant()
+					plant_pumpkin()
 					queue.append({'position': task['position'], 'action': 'check'})
 				elif get_entity_type() == Entities.Pumpkin:
 					if not can_harvest():
@@ -113,6 +115,8 @@ def pumpkins_0_2_0():
 
 		harvest()
 	
-	run()
+	clear()
+	while True:
+		plant_and_harvest_field()
 
 pumpkins_0_2_0()
