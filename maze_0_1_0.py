@@ -16,6 +16,8 @@ def maze_0_1_0():
 			print("waiting for hedge")
 
 		while get_entity_type() != Entities.Hedge:
+			if num_items(Items.Pumpkin) < 10 * FERTILIZER_BATCH_BUY:
+				error()
 			if num_items(Items.Fertilizer) == 0:
 				trade(Items.Fertilizer, FERTILIZER_BATCH_BUY)
 			use_item(Items.Fertilizer)
@@ -64,13 +66,13 @@ def maze_0_1_0():
 	def new_directions(return_direction):
 		if return_direction == None:
 			return DIRECTIONS
-		elif return_direction == North:
-			return [West, North, East]
-		elif return_direction == East:
-			return [North, East, South]
 		elif return_direction == South:
-			return [East, South, West]
+			return [West, North, East]
 		elif return_direction == West:
+			return [North, East, South]
+		elif return_direction == North:
+			return [East, South, West]
+		elif return_direction == East:
 			return [South, West, North]
 		else:
 			error()
@@ -129,7 +131,7 @@ def maze_0_1_0():
 						return True
 					# not necessary ATM
 					# walls[current_position[1]][current_position[0]][direction_index(direction)] = False
-					found = go(target_position, direction, walls)
+					found = go(target_position, opposite_direction(direction), walls)
 					if found:
 						return True
 				else:
