@@ -2,11 +2,6 @@ def cactus():
 	WIDTH = get_world_size()
 	HEIGHT = get_world_size()
 
-	def move_next():
-		move(East)
-		if get_pos_x() == 0:
-			move(North)
-
 	def fill_field(cactus_sizes):
 		move_to(0, 0)
 

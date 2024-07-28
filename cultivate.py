@@ -21,10 +21,12 @@ def water_if_needed():
 def cultivate(entity):
 	BUY_CARROT_SEEDS_BATCH = 100
 	BUY_CACTUS_SEEDS_BATCH = 100
+	BUY_EGGS_BATCH = 100
 
-	check_ground_type()
+	if entity != Entities.Grass and entity != Entities.Dinosaur:
+		check_ground_type()
 
-	if entity != Entities.Cactus:
+	if entity != Entities.Cactus and entity != Entities.Dinosaur:
 		water_if_needed()
 
 	if entity == Entities.Carrots and num_items(Items.Carrot_Seed) == 0:
@@ -35,4 +37,11 @@ def cultivate(entity):
 		if not trade(Items.Cactus_Seed, BUY_CACTUS_SEEDS_BATCH):
 			error()
 
-	plant(entity)
+	if entity == Entities.Dinosaur and num_items(Items.Egg) == 0:
+		if not trade(Items.Egg, BUY_EGGS_BATCH):
+			error()
+
+	if entity != Entities.Dinosaur:
+		plant(entity)
+	else:
+		use_item(Items.Egg)
