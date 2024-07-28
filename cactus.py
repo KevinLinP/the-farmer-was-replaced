@@ -14,7 +14,7 @@ def cactus():
 			x = get_pos_x()
 			y = get_pos_y()
 			check_ground_type()
-			cultivate(Entities.Cactus, False)
+			cultivate(Entities.Cactus)
 			cactus_sizes[y][x] = measure()
 
 			move_next()
