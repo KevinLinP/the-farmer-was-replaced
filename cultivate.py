@@ -35,6 +35,7 @@ def cultivate(entity):
 		
 	if entity == Entities.Cactus and num_items(Items.Cactus_Seed) == 0:
 		if not trade(Items.Cactus_Seed, BUY_CACTUS_SEEDS_BATCH):
+			quick_print(get_cost(Items.Cactus_Seed))
 			error()
 
 	if entity == Entities.Dinosaur and num_items(Items.Egg) == 0:

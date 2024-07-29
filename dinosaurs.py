@@ -3,17 +3,17 @@ def dinosaurs():
 	HEIGHT = WIDTH
 	NUM_SORTS_BEFORE_HARVEST = 3
 
-	def fill_field(dino_types, dino_counts):
+	def fill_field(dino_types):
 		move_to(0, 0)
 
 		while True:
 			x = get_pos_x()
 			y = get_pos_y()
 			check_ground_type()
-			cultivate(Entities.Dinosaur)
+			if get_entity_type() != Entities.Dinosaur:
+				cultivate(Entities.Dinosaur)
 			type = measure()
-			dino_counts[y][x] = type
-			dino_counts[type] += 1
+			dino_types[y][x] = type
 
 			move_next()
 			x = get_pos_x()
@@ -46,14 +46,20 @@ def dinosaurs():
 				dino_types_row[x] = dino_types_row[x + 1]
 				dino_types_row[x + 1] = moved
 				move(East) # technically not needed on last iteration
+	
+	def read_row(dino_types, y):
+		move_to(0, y)
+		for x in range(WIDTH):
+			dino_types[y][x] = measure()
+			move(East)
 
-	clear()
+	# clear()
 	dino_types = initialize_array(None)
-	dino_counts = [0, 0, 0, 0]
-	fill_field(dino_types, dino_counts)
+	fill_field(dino_types)
 
 	for _ in range(NUM_SORTS_BEFORE_HARVEST):
 		for y in range(HEIGHT):
+			read_row(dino_types, y)
 			bubble_sort_x(dino_types, y)
 
 	move_to(0, 0)
